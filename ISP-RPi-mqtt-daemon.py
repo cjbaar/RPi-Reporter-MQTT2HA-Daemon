@@ -1065,6 +1065,20 @@ def getSystemCPUTemperature():
     return rpi_cpu_temp
 
 
+def getSystemFanSpeed():
+    global rpi_fan_speed
+    cmd_locn1 = '/sys/devices/platform/cooling_fan/hwmon/hwmon*/fan1_input'
+    cmdString = '/bin/cat {}'.format(
+        cmd_locn1)
+
+    rpi_fan_speed = int('-1')
+    if os.path.exists(cmd_locn1):
+        stdout, _, returncode = invoke_shell_cmd(cmdString)
+        if not returncode:
+            rpi_fan_speed = stdout.decode('utf-8').rstrip()
+    print_line('rpi_fan_speed=[{}]'.format(rpi_fan_speed), debug=True)
+    
+
 def getSystemThermalStatus():
     global rpi_throttle_status
     # sudo vcgencmd get_throttled
