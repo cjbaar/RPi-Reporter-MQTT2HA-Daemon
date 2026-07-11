@@ -418,6 +418,7 @@ rpi_filesystem_percent = ''
 rpi_system_temp = ''
 rpi_gpu_temp = ''
 rpi_cpu_temp = ''
+rpi_fan_speed = ''
 rpi_mqtt_script = script_info
 rpi_interfaces = []
 rpi_filesystem = []
@@ -1619,6 +1620,7 @@ K_RPI_RAM_USED = 'mem_used_prcnt'  # "mem_used_prcnt"
 K_RPI_SYSTEM_TEMP = "temperature_c"
 K_RPI_GPU_TEMP = "temp_gpu_c"
 K_RPI_CPU_TEMP = "temp_cpu_c"
+K_RPI_FAN_SPEED = "fan_speed"
 K_RPI_SCRIPT = "reporter"
 K_RPI_SCRIPT_VERSIONS = "reporter_releases"
 K_RPI_NETWORK = "networking"
@@ -1712,6 +1714,7 @@ def send_status(timestamp, nothing):
     rpiData[K_RPI_SYSTEM_TEMP] = forceSingleDigit(rpi_system_temp)
     rpiData[K_RPI_GPU_TEMP] = forceSingleDigit(rpi_gpu_temp)
     rpiData[K_RPI_CPU_TEMP] = forceSingleDigit(rpi_cpu_temp)
+    rpiData[K_RPI_FAN_SPEED] = int(rpi_fan_speed)
 
     rpiData[K_RPI_SCRIPT] = rpi_mqtt_script.replace('.py', '')
     rpiData[K_RPI_SCRIPT_VERSIONS] = ','.join(daemon_version_list)
