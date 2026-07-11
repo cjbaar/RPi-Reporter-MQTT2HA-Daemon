@@ -17,6 +17,7 @@ import re
 import json
 import os.path
 import argparse
+from pathlib import Path
 from time import time, sleep, localtime, strftime
 from collections import OrderedDict
 from colorama import init as colorama_init
@@ -1072,7 +1073,8 @@ def getSystemFanSpeed():
         cmd_locn1)
 
     rpi_fan_speed = int('-1')
-    if os.path.exists(cmd_locn1):
+    directory = Path("/")
+    if any(directory.glob(cmd_locn1)):   #os.path.exists(cmd_locn1):
         stdout, _, returncode = invoke_shell_cmd(cmdString)
         if not returncode:
             rpi_fan_speed = stdout.decode('utf-8').rstrip()
