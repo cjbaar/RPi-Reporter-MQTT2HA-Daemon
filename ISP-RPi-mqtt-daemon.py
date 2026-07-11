@@ -1853,6 +1853,7 @@ def update_values():
     getUptime()
     getFileSystemDrives()
     getSystemTemperature()
+    getSystemFanSpeed()
     getSystemThermalStatus()
     getLastUpdateDate()
     getDeviceMemory()
