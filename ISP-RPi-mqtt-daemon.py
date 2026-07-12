@@ -1465,6 +1465,7 @@ K_LD_FS_USED = "disk_used"
 K_LD_PAYLOAD_NAME = "info"
 K_LD_CPU_USE = "cpu_load"
 K_LD_MEM_USED = "mem_used"
+K_LD_UPS_STATUS = "ups_status"
 
 if interval_in_minutes < 5:
     K_LD_CPU_USE_JSON = "cpu.load_1min_prcnt"
@@ -1531,6 +1532,13 @@ detectorValues = OrderedDict([
         json_value="mem_used_prcnt",
         unit="%",
         icon='mdi:memory'
+    )),
+    (K_LD_UPS_STATUS, dict(
+        title="UPS Status",
+        topic_category="sensor",
+        no_title_prefix="yes",
+        json_value="ups_data.ups.status",
+        icon='mdi:battery-outline'
     ))
 ])
 
