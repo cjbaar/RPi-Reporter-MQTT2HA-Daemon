@@ -1801,7 +1801,7 @@ def send_status(timestamp, nothing):
     rpiData[K_RPI_GPU_TEMP] = forceSingleDigit(rpi_gpu_temp)
     rpiData[K_RPI_CPU_TEMP] = forceSingleDigit(rpi_cpu_temp)
     rpiData[K_RPI_FAN_SPEED] = int(rpi_fan_speed)
-    rpiData[K_RPI_FAN_SPEED] = forceSingleDigit(rpi_fan_speed)
+    rpiData[K_RPI_FAN_SPEED] = int(rpi_fan_speed)
     rpiData[K_RPI_UPS_DATA] = rpi_ups_data
 
     rpiData[K_RPI_SCRIPT] = rpi_mqtt_script.replace('.py', '')
