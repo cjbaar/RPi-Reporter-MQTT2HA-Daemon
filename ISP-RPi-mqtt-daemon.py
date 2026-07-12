@@ -1102,7 +1102,7 @@ def getSystemUpsData():
             keys = full_key.strip().split('.')
             value = value.strip()
             
-            current_level = root_dict
+            current_level = rpi_ups_data
             
             # Traverse up to the parent of the final key
             for key in keys[:-1]:
