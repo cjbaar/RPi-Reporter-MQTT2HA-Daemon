@@ -1098,21 +1098,31 @@ def getSystemUpsData():
             if ':' not in line:
                 continue
                 
-            # Split key and value, clean up whitespace
             full_key, value = line.split(':', 1)
-            full_key, value = full_key.strip(), value.strip()
+            keys = full_key.strip().split('.')
+            value = value.strip()
             
-            # Navigate and build the nested structure
-            keys = full_key.split('.')
-            current_level = rpi_ups_data
+            current_level = root_dict
             
+            # Traverse up to the parent of the final key
             for key in keys[:-1]:
                 if key not in current_level:
                     current_level[key] = {}
+                # If the intermediate key was previously saved as a string,
+                # convert it to a dict and preserve its value under 'value'
+                elif not isinstance(current_level[key], dict):
+                    current_level[key] = {"value": current_level[key]}
+                    
                 current_level = current_level[key]
                 
-            # Assign the final value to the last sub-key
-            current_level[keys[-1]] = value
+            last_key = keys[-1]
+            
+            # If the last key already exists as a dict (created by a deeper path),
+            # save this value under the special 'value' key
+            if last_key in current_level and isinstance(current_level[last_key], dict):
+                current_level[last_key]["value"] = value
+            else:
+                current_level[last_key] = value
     
     except:
         pass
