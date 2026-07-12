@@ -1674,6 +1674,7 @@ K_RPI_SYSTEM_TEMP = "temperature_c"
 K_RPI_GPU_TEMP = "temp_gpu_c"
 K_RPI_CPU_TEMP = "temp_cpu_c"
 K_RPI_FAN_SPEED = "fan_speed"
+K_RPI_UPS_DATA = "ups_data"
 K_RPI_SCRIPT = "reporter"
 K_RPI_SCRIPT_VERSIONS = "reporter_releases"
 K_RPI_NETWORK = "networking"
@@ -1768,6 +1769,7 @@ def send_status(timestamp, nothing):
     rpiData[K_RPI_GPU_TEMP] = forceSingleDigit(rpi_gpu_temp)
     rpiData[K_RPI_CPU_TEMP] = forceSingleDigit(rpi_cpu_temp)
     rpiData[K_RPI_FAN_SPEED] = int(rpi_fan_speed)
+    rpiData[K_RPI_UPS_DATA] = rpi_ups_data
 
     rpiData[K_RPI_SCRIPT] = rpi_mqtt_script.replace('.py', '')
     rpiData[K_RPI_SCRIPT_VERSIONS] = ','.join(daemon_version_list)
@@ -1893,6 +1895,7 @@ def update_values():
     getFileSystemDrives()
     getSystemTemperature()
     getSystemFanSpeed()
+    getSystemUpsData()
     getSystemThermalStatus()
     getLastUpdateDate()
     getDeviceMemory()
