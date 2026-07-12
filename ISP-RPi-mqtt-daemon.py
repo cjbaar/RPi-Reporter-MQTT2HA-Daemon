@@ -420,6 +420,7 @@ rpi_system_temp = ''
 rpi_gpu_temp = ''
 rpi_cpu_temp = ''
 rpi_fan_speed = 0
+rpi_ups_data = {}
 rpi_mqtt_script = script_info
 rpi_interfaces = []
 rpi_filesystem = []
@@ -1078,6 +1079,43 @@ def getSystemFanSpeed():
         if not returncode:
             rpi_fan_speed = stdout.decode('utf-8').rstrip()
     print_line('rpi_fan_speed=[{}]'.format(rpi_fan_speed), debug=True)
+
+
+def getSystemUpsData():
+    global rpi_ups_data
+    rpi_ups_data = {}
+    rpi_ups_data['cmd.status'] = -1
+
+    try:
+        # Execute the upsc command
+        # Run WITHOUT check=True so it does not raise an exception on failure
+        result = subprocess.run(['/usr/bin/upsc', 'cyberpower'], capture_output=True, text=True)
+        rpi_ups_data['cmd.status'] = result.returncode
+        if rpi_ups_data['cmd.status'] != 0:
+            return
+
+        for line in result.stdout.splitlines():
+            if ':' not in line:
+                continue
+                
+            # Split key and value, clean up whitespace
+            full_key, value = line.split(':', 1)
+            full_key, value = full_key.strip(), value.strip()
+            
+            # Navigate and build the nested structure
+            keys = full_key.split('.')
+            current_level = rpi_ups_data
+            
+            for key in keys[:-1]:
+                if key not in current_level:
+                    current_level[key] = {}
+                current_level = current_level[key]
+                
+            # Assign the final value to the last sub-key
+            current_level[keys[-1]] = value
+    
+    except:
+        pass
     
 
 def getSystemThermalStatus():
