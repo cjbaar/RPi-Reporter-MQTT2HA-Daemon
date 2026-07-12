@@ -1081,7 +1081,7 @@ def getSystemFanSpeed():
         stdout, _, returncode = invoke_shell_cmd(cmdString)
         if not returncode:
             rpi_fan_speed = stdout.decode('utf-8').rstrip()
-            rpi_fan_speed_pct = rpi_fan_speed/7500
+            rpi_fan_speed_pct = int(rpi_fan_speed)/7500
     print_line('rpi_fan_speed=[{}]'.format(rpi_fan_speed), debug=True)
 
 
