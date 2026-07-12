@@ -420,6 +420,7 @@ rpi_system_temp = ''
 rpi_gpu_temp = ''
 rpi_cpu_temp = ''
 rpi_fan_speed = 0
+rpi_fan_speed_pct = 0
 rpi_ups_data = {}
 rpi_mqtt_script = script_info
 rpi_interfaces = []
@@ -1069,15 +1070,18 @@ def getSystemCPUTemperature():
 
 def getSystemFanSpeed():
     global rpi_fan_speed
+    global rpi_fan_speed_pct
     cmd_locn1 = '/sys/devices/platform/cooling_fan/hwmon/hwmon*/fan1_input'
     cmdString = '/bin/cat {}'.format(
         cmd_locn1)
 
     rpi_fan_speed = int('-1')
+    rpi_fan_speed_pct = 0
     if glob.glob(cmd_locn1):   #os.path.exists(cmd_locn1):
         stdout, _, returncode = invoke_shell_cmd(cmdString)
         if not returncode:
             rpi_fan_speed = stdout.decode('utf-8').rstrip()
+            rpi_fan_speed_pct = rpi_fan_speed/7500
     print_line('rpi_fan_speed=[{}]'.format(rpi_fan_speed), debug=True)
 
 
@@ -1465,6 +1469,7 @@ K_LD_FS_USED = "disk_used"
 K_LD_PAYLOAD_NAME = "info"
 K_LD_CPU_USE = "cpu_load"
 K_LD_MEM_USED = "mem_used"
+K_LD_FAN_SPEED = "fan_speed"
 K_LD_UPS_STATUS = "ups_status"
 
 if interval_in_minutes < 5:
@@ -1532,6 +1537,14 @@ detectorValues = OrderedDict([
         json_value="mem_used_prcnt",
         unit="%",
         icon='mdi:memory'
+    )),
+    (K_LD_FAN_SPEED, dict(
+        title="Fan Speed",
+        topic_category="sensor",
+        no_title_prefix="yes",
+        json_value="fan_speed_pct",
+        unit="%",
+        icon='mdi:fan'
     )),
     (K_LD_UPS_STATUS, dict(
         title="UPS Status",
@@ -1692,6 +1705,7 @@ K_RPI_SYSTEM_TEMP = "temperature_c"
 K_RPI_GPU_TEMP = "temp_gpu_c"
 K_RPI_CPU_TEMP = "temp_cpu_c"
 K_RPI_FAN_SPEED = "fan_speed"
+K_RPI_FAN_SPEED_PCT = "fan_speed_pct"
 K_RPI_UPS_DATA = "ups_data"
 K_RPI_SCRIPT = "reporter"
 K_RPI_SCRIPT_VERSIONS = "reporter_releases"
@@ -1787,6 +1801,7 @@ def send_status(timestamp, nothing):
     rpiData[K_RPI_GPU_TEMP] = forceSingleDigit(rpi_gpu_temp)
     rpiData[K_RPI_CPU_TEMP] = forceSingleDigit(rpi_cpu_temp)
     rpiData[K_RPI_FAN_SPEED] = int(rpi_fan_speed)
+    rpiData[K_RPI_FAN_SPEED] = forceSingleDigit(rpi_fan_speed)
     rpiData[K_RPI_UPS_DATA] = rpi_ups_data
 
     rpiData[K_RPI_SCRIPT] = rpi_mqtt_script.replace('.py', '')
