@@ -1083,7 +1083,7 @@ def getSystemFanSpeed():
 
 def getSystemUpsData():
     global rpi_ups_data
-    rpi_ups_data = {}
+    rpi_ups_data = {'cmd':{}, 'ups':{}}
 
     try:
         # Execute the upsc command
