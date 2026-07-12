@@ -1084,14 +1084,13 @@ def getSystemFanSpeed():
 def getSystemUpsData():
     global rpi_ups_data
     rpi_ups_data = {}
-    rpi_ups_data['cmd.status'] = -1
 
     try:
         # Execute the upsc command
         # Run WITHOUT check=True so it does not raise an exception on failure
         result = subprocess.run(['/usr/bin/upsc', 'cyberpower'], capture_output=True, text=True)
-        rpi_ups_data['cmd.status'] = result.returncode
-        if rpi_ups_data['cmd.status'] != 0:
+        rpi_ups_data['cmd']['status'] = result.returncode
+        if rpi_ups_data['cmd']['status'] != 0:
             return
 
         for line in result.stdout.splitlines():
@@ -1125,7 +1124,8 @@ def getSystemUpsData():
                 current_level[last_key] = value
     
     except:
-        pass
+        rpi_ups_data['cmd']['status'] = -1
+        rpi_ups_data['ups']['status'] = 'UNKNOWN'
     
 
 def getSystemThermalStatus():
