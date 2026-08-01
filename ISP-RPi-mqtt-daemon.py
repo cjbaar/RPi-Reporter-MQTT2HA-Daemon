@@ -1095,6 +1095,7 @@ def getSystemUpsData():
         result = subprocess.run(['/usr/bin/upsc', 'cyberpower'], capture_output=True, text=True)
         rpi_ups_data['cmd']['status'] = result.returncode
         if rpi_ups_data['cmd']['status'] != 0:
+            rpi_ups_data['ups']['status'] = 'USB?'
             return
 
         for line in result.stdout.splitlines():
