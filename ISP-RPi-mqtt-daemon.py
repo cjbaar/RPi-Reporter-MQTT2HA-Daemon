@@ -273,7 +273,7 @@ discovery_prefix = config['MQTT'].get(
     'discovery_prefix', default_discovery_prefix).lower()
 
 # report our RPi values every 5min
-min_interval_in_minutes = 1
+min_interval_in_minutes = 0.5
 max_interval_in_minutes = 30
 default_interval_in_minutes = 5
 interval_in_minutes = config['Daemon'].getint(
