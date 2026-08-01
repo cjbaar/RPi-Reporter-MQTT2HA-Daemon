@@ -1524,7 +1524,7 @@ detectorValues = OrderedDict([
         json_value="fs_used_prcnt",
     )),
     (K_LD_CPU_USE, dict(
-        title="CPU Use",
+        title="CPU Load",
         topic_category="sensor",
         no_title_prefix="yes",
         unit="%",
