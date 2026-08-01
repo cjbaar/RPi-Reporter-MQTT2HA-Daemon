@@ -273,11 +273,11 @@ discovery_prefix = config['MQTT'].get(
     'discovery_prefix', default_discovery_prefix).lower()
 
 # report our RPi values every 5min
-min_interval_in_minutes = 0.5
-max_interval_in_minutes = 30
-default_interval_in_minutes = 5
-interval_in_minutes = config['Daemon'].getint(
-    'interval_in_minutes', default_interval_in_minutes)
+min_interval_in_seconds = 15
+max_interval_in_seconds = 30*60
+default_interval_in_seconds = 60
+interval_in_seconds = config['Daemon'].getint(
+    'interval_in_seconds', default_interval_in_seconds)
 
 # check our RPi pending-updates every 4 hours
 min_check_interval_in_hours = 2
@@ -303,9 +303,9 @@ if config.has_section('Commands'):
 
 # Check configuration
 #
-if (interval_in_minutes < min_interval_in_minutes) or (interval_in_minutes > max_interval_in_minutes):
-    print_line('ERROR: Invalid "interval_in_minutes" found in configuration file: "config.ini"! Must be [{}-{}] Fix and try again... Aborting'.format(
-        min_interval_in_minutes, max_interval_in_minutes), error=True, sd_notify=True)
+if (interval_in_seconds < min_interval_in_seconds) or (interval_in_seconds > max_interval_in_seconds):
+    print_line('ERROR: Invalid "interval_in_seconds" found in configuration file: "config.ini"! Must be [{}-{}] Fix and try again... Aborting'.format(
+        min_interval_in_seconds, max_interval_in_seconds), error=True, sd_notify=True)
     sys.exit(1)
 
 if (check_interval_in_hours < min_check_interval_in_hours) or (check_interval_in_hours > max_check_interval_in_hours):
@@ -1473,9 +1473,9 @@ K_LD_MEM_USED = "mem_used"
 K_LD_FAN_SPEED = "fan_speed"
 K_LD_UPS_STATUS = "ups_status"
 
-if interval_in_minutes < 5:
+if interval_in_seconds < 5*60:
     K_LD_CPU_USE_JSON = "cpu.load_1min_prcnt"
-elif interval_in_minutes < 15:
+elif interval_in_seconds < 15*60:
     K_LD_CPU_USE_JSON = "cpu.load_5min_prcnt"
 else:
     K_LD_CPU_USE_JSON = "cpu.load_15min_prcnt"
@@ -1658,11 +1658,11 @@ def startPeriodTimer():
     global periodTimeRunningStatus
     stopPeriodTimer()
     endPeriodTimer = threading.Timer(
-        interval_in_minutes * 60.0, periodTimeoutHandler)
+        interval_in_seconds, periodTimeoutHandler)
     endPeriodTimer.start()
     periodTimeRunningStatus = True
     print_line(
-        '- started PERIOD timer - every {} seconds'.format(interval_in_minutes * 60.0), debug=True)
+        '- started PERIOD timer - every {} seconds'.format(interval_in_seconds), debug=True)
 
 
 def stopPeriodTimer():
@@ -1680,7 +1680,7 @@ def isPeriodTimerRunning():
 
 # our TIMER
 endPeriodTimer = threading.Timer(
-    interval_in_minutes * 60.0, periodTimeoutHandler)
+    interval_in_seconds, periodTimeoutHandler)
 # our BOOL tracking state of TIMER
 periodTimeRunningStatus = False
 reported_first_time = False
@@ -1808,7 +1808,7 @@ def send_status(timestamp, nothing):
 
     rpiData[K_RPI_SCRIPT] = rpi_mqtt_script.replace('.py', '')
     rpiData[K_RPI_SCRIPT_VERSIONS] = ','.join(daemon_version_list)
-    rpiData[SCRIPT_REPORT_INTERVAL] = interval_in_minutes
+    rpiData[SCRIPT_REPORT_INTERVAL] = interval_in_seconds
 
     rpiTopDict = OrderedDict()
     rpiTopDict[K_LD_PAYLOAD_NAME] = rpiData
