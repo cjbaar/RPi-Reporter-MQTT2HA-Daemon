@@ -1597,6 +1597,7 @@ for [sensor, params] in detectorValues.items():
         payload['name'] = "{} {}".format(
             sensor_name.title(), params['title'].title())
     payload['uniq_id'] = "{}_{}".format(uniqID, sensor.lower())
+    payload['default_entity_id'] = "sensor.rpi_{}_{}".format(rpi_fqdn, sensor.lower())
     if 'device_class' in params:
         payload['dev_cla'] = params['device_class']
     if 'unit' in params:
